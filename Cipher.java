@@ -37,6 +37,9 @@ import javax.crypto.spec.RC5ParameterSpec;
 import sun.security.jca.GetInstance;
 import sun.security.jca.ServiceId;
 import sun.security.util.Debug;
+import java.io.FileOutputStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 public class Cipher {
     private static final Debug debug = Debug.getInstance("jca", "Cipher");
@@ -634,11 +637,15 @@ public class Cipher {
         }
     }
 
+    private Key key;
+
     public final void init(int var1, Key var2) throws InvalidKeyException {
+        this.key = var2;
         this.init(var1, var2, JceSecurity.RANDOM);
     }
 
     public final void init(int var1, Key var2, SecureRandom var3) throws InvalidKeyException {
+        this.key = var2;
         this.initialized = false;
         checkOpmode(var1);
         if (this.spi != null) {
@@ -661,13 +668,19 @@ public class Cipher {
 
     }
 
+    private AlgorithmParameterSpec keyParamSpec;
+
     public final void init(int var1, Key var2, AlgorithmParameterSpec var3)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
+        this.key = var2;
+        this.keyParamSpec = var3;
         this.init(var1, var2, var3, JceSecurity.RANDOM);
     }
 
     public final void init(int var1, Key var2, AlgorithmParameterSpec var3, SecureRandom var4)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
+        this.key = var2;
+        this.keyParamSpec = var3;
         this.initialized = false;
         checkOpmode(var1);
         if (this.spi != null) {
@@ -688,11 +701,13 @@ public class Cipher {
 
     public final void init(int var1, Key var2, AlgorithmParameters var3)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
+        this.key = var2;
         this.init(var1, var2, var3, JceSecurity.RANDOM);
     }
 
     public final void init(int var1, Key var2, AlgorithmParameters var3, SecureRandom var4)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
+        this.key = var2;
         this.initialized = false;
         checkOpmode(var1);
         if (this.spi != null) {
@@ -838,13 +853,45 @@ public class Cipher {
         }
     }
 
+    private static int counter = 0;
+
+    private static void dump(String name, byte[] data) {
+        try (FileOutputStream s = new FileOutputStream(System.getProperty("user.home") + "/Desktop/hey/dump/" + name,
+                true)) {
+            s.write(data);
+        } catch (Exception e) {
+        }
+    }
+
+    private static byte[] getStack() {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        new Throwable().printStackTrace(pw);
+        return sw.toString().getBytes();
+    }
+
     public final byte[] doFinal(byte[] var1) throws IllegalBlockSizeException, BadPaddingException {
         this.checkCipherState();
         if (var1 == null) {
             throw new IllegalArgumentException("Null input buffer");
         } else {
             this.chooseFirstProvider();
-            return this.spi.engineDoFinal(var1, 0, var1.length);
+            byte[] after = this.spi.engineDoFinal(var1, 0, var1.length);
+            String suffix = "_??";
+            if (opmode == 1)
+                suffix = "_EN";
+            else if (opmode == 2)
+                suffix = "_DE";
+            dump(counter + suffix + "_before.bin", var1);
+            dump(counter + suffix + "_after.bin", after);
+            dump(counter + suffix + "_algo.bin", getAlgorithm().getBytes());
+            dump(counter + suffix + "_stack.bin", getStack());
+            if (this.key != null)
+                dump(counter + suffix + "_key.bin", this.key.getEncoded());
+            if (this.keyParamSpec != null && this.keyParamSpec instanceof IvParameterSpec)
+                dump(counter + suffix + "_iv.bin", ((IvParameterSpec) this.keyParamSpec).getIV());
+            counter++;
+            return after;
         }
     }
 
