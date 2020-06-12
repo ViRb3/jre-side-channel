@@ -90,8 +90,8 @@ class RuntimeImpl implements RuntimeMXBean {
         Set var3 = var1.stringPropertyNames();
         Iterator var4 = var3.iterator();
 
-        while(var4.hasNext()) {
-            String var5 = (String)var4.next();
+        while (var4.hasNext()) {
+            String var5 = (String) var4.next();
             String var6 = var1.getProperty(var5);
             var2.put(var5, var6);
         }
@@ -103,4 +103,3 @@ class RuntimeImpl implements RuntimeMXBean {
         return Util.newObjectName("java.lang:type=Runtime");
     }
 }
- 

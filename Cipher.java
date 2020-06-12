@@ -110,7 +110,7 @@ public class Cipher {
             StringTokenizer var3 = new StringTokenizer(var0, "/");
 
             try {
-                while(var3.hasMoreTokens() && var2 < 3) {
+                while (var3.hasMoreTokens() && var2 < 3) {
                     var1[var2++] = var3.nextToken().trim();
                 }
 
@@ -143,13 +143,13 @@ public class Cipher {
         }
 
         if (var3 == null && var4 == null) {
-            Cipher.Transform var6 = new Cipher.Transform(var2, "", (String)null, (String)null);
+            Cipher.Transform var6 = new Cipher.Transform(var2, "", (String) null, (String) null);
             return Collections.singletonList(var6);
         } else {
             ArrayList var5 = new ArrayList(4);
-            var5.add(new Cipher.Transform(var2, "/" + var3 + "/" + var4, (String)null, (String)null));
-            var5.add(new Cipher.Transform(var2, "/" + var3, (String)null, var4));
-            var5.add(new Cipher.Transform(var2, "//" + var4, var3, (String)null));
+            var5.add(new Cipher.Transform(var2, "/" + var3 + "/" + var4, (String) null, (String) null));
+            var5.add(new Cipher.Transform(var2, "/" + var3, (String) null, var4));
+            var5.add(new Cipher.Transform(var2, "//" + var4, var3, (String) null));
             var5.add(new Cipher.Transform(var2, "", var3, var4));
             return var5;
         }
@@ -165,8 +165,8 @@ public class Cipher {
                 return null;
             }
 
-            var4 = (Cipher.Transform)var3.next();
-        } while(!var2.endsWith(var4.suffix));
+            var4 = (Cipher.Transform) var3.next();
+        } while (!var2.endsWith(var4.suffix));
 
         return var4;
     }
@@ -176,8 +176,8 @@ public class Cipher {
         ArrayList var2 = new ArrayList(var1.size());
         Iterator var3 = var1.iterator();
 
-        while(var3.hasNext()) {
-            Cipher.Transform var4 = (Cipher.Transform)var3.next();
+        while (var3.hasNext()) {
+            Cipher.Transform var4 = (Cipher.Transform) var3.next();
             var2.add(new ServiceId("Cipher", var4.transform));
         }
 
@@ -185,7 +185,7 @@ public class Cipher {
         Iterator var12 = var11.iterator();
         Exception var5 = null;
 
-        while(true) {
+        while (true) {
             Service var6;
             Cipher.Transform var7;
             int var8;
@@ -196,21 +196,21 @@ public class Cipher {
                             throw new NoSuchAlgorithmException("Cannot find any provider supporting " + var0, var5);
                         }
 
-                        var6 = (Service)var12.next();
-                    } while(!JceSecurity.canUseProvider(var6.getProvider()));
+                        var6 = (Service) var12.next();
+                    } while (!JceSecurity.canUseProvider(var6.getProvider()));
 
                     var7 = getTransform(var6, var1);
-                } while(var7 == null);
+                } while (var7 == null);
 
                 var8 = var7.supportsModePadding(var6);
-            } while(var8 == 0);
+            } while (var8 == 0);
 
             if (var8 == 2) {
-                return new Cipher((CipherSpi)null, var6, var12, var0, var1);
+                return new Cipher((CipherSpi) null, var6, var12, var0, var1);
             }
 
             try {
-                CipherSpi var9 = (CipherSpi)var6.newInstance((Object)null);
+                CipherSpi var9 = (CipherSpi) var6.newInstance((Object) null);
                 var7.setModePadding(var9);
                 return new Cipher(var9, var6, var12, var0, var1);
             } catch (Exception var10) {
@@ -219,7 +219,8 @@ public class Cipher {
         }
     }
 
-    public static final Cipher getInstance(String var0, String var1) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException {
+    public static final Cipher getInstance(String var0, String var1)
+            throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException {
         if (var1 != null && var1.length() != 0) {
             Provider var2 = Security.getProvider(var1);
             if (var2 == null) {
@@ -232,7 +233,8 @@ public class Cipher {
         }
     }
 
-    public static final Cipher getInstance(String var0, Provider var1) throws NoSuchAlgorithmException, NoSuchPaddingException {
+    public static final Cipher getInstance(String var0, Provider var1)
+            throws NoSuchAlgorithmException, NoSuchPaddingException {
         if (var1 == null) {
             throw new IllegalArgumentException("Missing provider");
         } else {
@@ -242,15 +244,15 @@ public class Cipher {
             String var5 = null;
             Iterator var6 = var3.iterator();
 
-            while(true) {
-                while(true) {
+            while (true) {
+                while (true) {
                     Cipher.Transform var7;
                     Service var8;
                     do {
                         do {
                             if (!var6.hasNext()) {
                                 if (var2 instanceof NoSuchPaddingException) {
-                                    throw (NoSuchPaddingException)var2;
+                                    throw (NoSuchPaddingException) var2;
                                 }
 
                                 if (var5 != null) {
@@ -260,9 +262,9 @@ public class Cipher {
                                 throw new NoSuchAlgorithmException("No such algorithm: " + var0, var2);
                             }
 
-                            var7 = (Cipher.Transform)var6.next();
+                            var7 = (Cipher.Transform) var6.next();
                             var8 = var1.getService("Cipher", var7.transform);
-                        } while(var8 == null);
+                        } while (var8 == null);
 
                         if (!var4) {
                             Exception var9 = JceSecurity.getVerificationResult(var1);
@@ -273,11 +275,11 @@ public class Cipher {
 
                             var4 = true;
                         }
-                    } while(var7.supportsMode(var8) == 0);
+                    } while (var7.supportsMode(var8) == 0);
 
                     if (var7.supportsPadding(var8) != 0) {
                         try {
-                            CipherSpi var13 = (CipherSpi)var8.newInstance((Object)null);
+                            CipherSpi var13 = (CipherSpi) var8.newInstance((Object) null);
                             var7.setModePadding(var13);
                             Cipher var10 = new Cipher(var13, var0);
                             var10.provider = var8.getProvider();
@@ -310,12 +312,13 @@ public class Cipher {
 
     void chooseFirstProvider() {
         if (this.spi == null) {
-            synchronized(this.lock) {
+            synchronized (this.lock) {
                 if (this.spi == null) {
                     if (debug != null) {
                         int var2 = --warnCount;
                         if (var2 >= 0) {
-                            debug.println("Cipher.init() not first method called, disabling delayed provider selection");
+                            debug.println(
+                                    "Cipher.init() not first method called, disabling delayed provider selection");
                             if (var2 == 0) {
                                 debug.println("Further warnings of this type will be suppressed");
                             }
@@ -326,7 +329,7 @@ public class Cipher {
 
                     Exception var10 = null;
 
-                    while(true) {
+                    while (true) {
                         Service var3;
                         CipherSpi var4;
                         Cipher.Transform var5;
@@ -334,7 +337,8 @@ public class Cipher {
                             do {
                                 do {
                                     if (this.firstService == null && !this.serviceIterator.hasNext()) {
-                                        ProviderException var11 = new ProviderException("Could not construct CipherSpi instance");
+                                        ProviderException var11 = new ProviderException(
+                                                "Could not construct CipherSpi instance");
                                         if (var10 != null) {
                                             var11.initCause(var10);
                                         }
@@ -348,23 +352,23 @@ public class Cipher {
                                         this.firstService = null;
                                         this.firstSpi = null;
                                     } else {
-                                        var3 = (Service)this.serviceIterator.next();
+                                        var3 = (Service) this.serviceIterator.next();
                                         var4 = null;
                                     }
-                                } while(!JceSecurity.canUseProvider(var3.getProvider()));
+                                } while (!JceSecurity.canUseProvider(var3.getProvider()));
 
                                 var5 = getTransform(var3, this.transforms);
-                            } while(var5 == null);
-                        } while(var5.supportsModePadding(var3) == 0);
+                            } while (var5 == null);
+                        } while (var5.supportsModePadding(var3) == 0);
 
                         try {
                             if (var4 == null) {
-                                Object var6 = var3.newInstance((Object)null);
+                                Object var6 = var3.newInstance((Object) null);
                                 if (!(var6 instanceof CipherSpi)) {
                                     continue;
                                 }
 
-                                var4 = (CipherSpi)var6;
+                                var4 = (CipherSpi) var6;
                             }
 
                             var5.setModePadding(var4);
@@ -384,38 +388,41 @@ public class Cipher {
         }
     }
 
-    private void implInit(CipherSpi var1, int var2, int var3, Key var4, AlgorithmParameterSpec var5, AlgorithmParameters var6, SecureRandom var7) throws InvalidKeyException, InvalidAlgorithmParameterException {
-        switch(var2) {
-        case 1:
-            this.checkCryptoPerm(var1, var4);
-            var1.engineInit(var3, var4, var7);
-            break;
-        case 2:
-            this.checkCryptoPerm(var1, var4, var5);
-            var1.engineInit(var3, var4, var5, var7);
-            break;
-        case 3:
-            this.checkCryptoPerm(var1, var4, var6);
-            var1.engineInit(var3, var4, var6, var7);
-            break;
-        case 4:
-            this.checkCryptoPerm(var1, var4);
-            var1.engineInit(var3, var4, var7);
-            break;
-        default:
-            throw new AssertionError("Internal Cipher error: " + var2);
+    private void implInit(CipherSpi var1, int var2, int var3, Key var4, AlgorithmParameterSpec var5,
+            AlgorithmParameters var6, SecureRandom var7)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
+        switch (var2) {
+            case 1:
+                this.checkCryptoPerm(var1, var4);
+                var1.engineInit(var3, var4, var7);
+                break;
+            case 2:
+                this.checkCryptoPerm(var1, var4, var5);
+                var1.engineInit(var3, var4, var5, var7);
+                break;
+            case 3:
+                this.checkCryptoPerm(var1, var4, var6);
+                var1.engineInit(var3, var4, var6, var7);
+                break;
+            case 4:
+                this.checkCryptoPerm(var1, var4);
+                var1.engineInit(var3, var4, var7);
+                break;
+            default:
+                throw new AssertionError("Internal Cipher error: " + var2);
         }
 
     }
 
-    private void chooseProvider(int var1, int var2, Key var3, AlgorithmParameterSpec var4, AlgorithmParameters var5, SecureRandom var6) throws InvalidKeyException, InvalidAlgorithmParameterException {
-        synchronized(this.lock) {
+    private void chooseProvider(int var1, int var2, Key var3, AlgorithmParameterSpec var4, AlgorithmParameters var5,
+            SecureRandom var6) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        synchronized (this.lock) {
             if (this.spi != null) {
                 this.implInit(this.spi, var1, var2, var3, var4, var5, var6);
             } else {
                 Exception var8 = null;
 
-                while(true) {
+                while (true) {
                     Service var9;
                     CipherSpi var10;
                     Cipher.Transform var11;
@@ -425,19 +432,20 @@ public class Cipher {
                                 do {
                                     if (this.firstService == null && !this.serviceIterator.hasNext()) {
                                         if (var8 instanceof InvalidKeyException) {
-                                            throw (InvalidKeyException)var8;
+                                            throw (InvalidKeyException) var8;
                                         }
 
                                         if (var8 instanceof InvalidAlgorithmParameterException) {
-                                            throw (InvalidAlgorithmParameterException)var8;
+                                            throw (InvalidAlgorithmParameterException) var8;
                                         }
 
                                         if (var8 instanceof RuntimeException) {
-                                            throw (RuntimeException)var8;
+                                            throw (RuntimeException) var8;
                                         }
 
                                         String var16 = var3 != null ? var3.getClass().getName() : "(null)";
-                                        throw new InvalidKeyException("No installed provider supports this key: " + var16, var8);
+                                        throw new InvalidKeyException(
+                                                "No installed provider supports this key: " + var16, var8);
                                     }
 
                                     if (this.firstService != null) {
@@ -446,19 +454,19 @@ public class Cipher {
                                         this.firstService = null;
                                         this.firstSpi = null;
                                     } else {
-                                        var9 = (Service)this.serviceIterator.next();
+                                        var9 = (Service) this.serviceIterator.next();
                                         var10 = null;
                                     }
-                                } while(!var9.supportsParameter(var3));
-                            } while(!JceSecurity.canUseProvider(var9.getProvider()));
+                                } while (!var9.supportsParameter(var3));
+                            } while (!JceSecurity.canUseProvider(var9.getProvider()));
 
                             var11 = getTransform(var9, this.transforms);
-                        } while(var11 == null);
-                    } while(var11.supportsModePadding(var9) == 0);
+                        } while (var11 == null);
+                    } while (var11.supportsModePadding(var9) == 0);
 
                     try {
                         if (var10 == null) {
-                            var10 = (CipherSpi)var9.newInstance((Object)null);
+                            var10 = (CipherSpi) var9.newInstance((Object) null);
                         }
 
                         var11.setModePadding(var10);
@@ -535,9 +543,10 @@ public class Cipher {
         }
     }
 
-    private void checkCryptoPerm(CipherSpi var1, Key var2, AlgorithmParameterSpec var3) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    private void checkCryptoPerm(CipherSpi var1, Key var2, AlgorithmParameterSpec var3)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         if (this.cryptoPerm != CryptoAllPermission.INSTANCE) {
-            if (!this.passCryptoPermCheck(var1, var2, (AlgorithmParameterSpec)null)) {
+            if (!this.passCryptoPermCheck(var1, var2, (AlgorithmParameterSpec) null)) {
                 throw new InvalidKeyException("Illegal key size");
             } else if (var3 != null && !this.passCryptoPermCheck(var1, var2, var3)) {
                 throw new InvalidAlgorithmParameterException("Illegal parameters");
@@ -545,7 +554,8 @@ public class Cipher {
         }
     }
 
-    private void checkCryptoPerm(CipherSpi var1, Key var2, AlgorithmParameters var3) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    private void checkCryptoPerm(CipherSpi var1, Key var2, AlgorithmParameters var3)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         if (this.cryptoPerm != CryptoAllPermission.INSTANCE) {
             AlgorithmParameterSpec var4;
             try {
@@ -558,7 +568,8 @@ public class Cipher {
         }
     }
 
-    private boolean passCryptoPermCheck(CipherSpi var1, Key var2, AlgorithmParameterSpec var3) throws InvalidKeyException {
+    private boolean passCryptoPermCheck(CipherSpi var1, Key var2, AlgorithmParameterSpec var3)
+            throws InvalidKeyException {
         String var4 = this.cryptoPerm.getExemptionMechanism();
         int var5 = var1.engineGetKeySize(var2);
         int var7 = this.transformation.indexOf(47);
@@ -609,17 +620,17 @@ public class Cipher {
     }
 
     private static String getOpmodeString(int var0) {
-        switch(var0) {
-        case 1:
-            return "encryption";
-        case 2:
-            return "decryption";
-        case 3:
-            return "key wrapping";
-        case 4:
-            return "key unwrapping";
-        default:
-            return "";
+        switch (var0) {
+            case 1:
+                return "encryption";
+            case 2:
+                return "decryption";
+            case 3:
+                return "key wrapping";
+            case 4:
+                return "key unwrapping";
+            default:
+                return "";
         }
     }
 
@@ -635,7 +646,7 @@ public class Cipher {
             this.spi.engineInit(var1, var2, var3);
         } else {
             try {
-                this.chooseProvider(1, var1, var2, (AlgorithmParameterSpec)null, (AlgorithmParameters)null, var3);
+                this.chooseProvider(1, var1, var2, (AlgorithmParameterSpec) null, (AlgorithmParameters) null, var3);
             } catch (InvalidAlgorithmParameterException var5) {
                 throw new InvalidKeyException(var5);
             }
@@ -644,51 +655,58 @@ public class Cipher {
         this.initialized = true;
         this.opmode = var1;
         if (!skipDebug && pdebug != null) {
-            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: " + this.provider.getName());
+            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: "
+                    + this.provider.getName());
         }
 
     }
 
-    public final void init(int var1, Key var2, AlgorithmParameterSpec var3) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    public final void init(int var1, Key var2, AlgorithmParameterSpec var3)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         this.init(var1, var2, var3, JceSecurity.RANDOM);
     }
 
-    public final void init(int var1, Key var2, AlgorithmParameterSpec var3, SecureRandom var4) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    public final void init(int var1, Key var2, AlgorithmParameterSpec var3, SecureRandom var4)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         this.initialized = false;
         checkOpmode(var1);
         if (this.spi != null) {
             this.checkCryptoPerm(this.spi, var2, var3);
             this.spi.engineInit(var1, var2, var3, var4);
         } else {
-            this.chooseProvider(2, var1, var2, var3, (AlgorithmParameters)null, var4);
+            this.chooseProvider(2, var1, var2, var3, (AlgorithmParameters) null, var4);
         }
 
         this.initialized = true;
         this.opmode = var1;
         if (!skipDebug && pdebug != null) {
-            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: " + this.provider.getName());
+            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: "
+                    + this.provider.getName());
         }
 
     }
 
-    public final void init(int var1, Key var2, AlgorithmParameters var3) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    public final void init(int var1, Key var2, AlgorithmParameters var3)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         this.init(var1, var2, var3, JceSecurity.RANDOM);
     }
 
-    public final void init(int var1, Key var2, AlgorithmParameters var3, SecureRandom var4) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    public final void init(int var1, Key var2, AlgorithmParameters var3, SecureRandom var4)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
         this.initialized = false;
         checkOpmode(var1);
         if (this.spi != null) {
             this.checkCryptoPerm(this.spi, var2, var3);
             this.spi.engineInit(var1, var2, var3, var4);
         } else {
-            this.chooseProvider(3, var1, var2, (AlgorithmParameterSpec)null, var3, var4);
+            this.chooseProvider(3, var1, var2, (AlgorithmParameterSpec) null, var3, var4);
         }
 
         this.initialized = true;
         this.opmode = var1;
         if (!skipDebug && pdebug != null) {
-            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: " + this.provider.getName());
+            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: "
+                    + this.provider.getName());
         }
 
     }
@@ -701,11 +719,12 @@ public class Cipher {
         this.initialized = false;
         checkOpmode(var1);
         if (var2 instanceof X509Certificate) {
-            X509Certificate var4 = (X509Certificate)var2;
+            X509Certificate var4 = (X509Certificate) var2;
             Set var5 = var4.getCriticalExtensionOIDs();
             if (var5 != null && !var5.isEmpty() && var5.contains("2.5.29.15")) {
                 boolean[] var6 = var4.getKeyUsage();
-                if (var6 != null && (var1 == 1 && var6.length > 3 && !var6[3] || var1 == 3 && var6.length > 2 && !var6[2])) {
+                if (var6 != null
+                        && (var1 == 1 && var6.length > 3 && !var6[3] || var1 == 3 && var6.length > 2 && !var6[2])) {
                     throw new InvalidKeyException("Wrong key usage");
                 }
             }
@@ -717,7 +736,7 @@ public class Cipher {
             this.spi.engineInit(var1, var8, var3);
         } else {
             try {
-                this.chooseProvider(4, var1, var8, (AlgorithmParameterSpec)null, (AlgorithmParameters)null, var3);
+                this.chooseProvider(4, var1, var8, (AlgorithmParameterSpec) null, (AlgorithmParameters) null, var3);
             } catch (InvalidAlgorithmParameterException var7) {
                 throw new InvalidKeyException(var7);
             }
@@ -726,7 +745,8 @@ public class Cipher {
         this.initialized = true;
         this.opmode = var1;
         if (!skipDebug && pdebug != null) {
-            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: " + this.provider.getName());
+            pdebug.println("Cipher." + this.transformation + " " + getOpmodeString(var1) + " algorithm from: "
+                    + this.provider.getName());
         }
 
     }
@@ -788,7 +808,8 @@ public class Cipher {
         this.checkCipherState();
         if (var1 != null && var2 != null) {
             if (var1 == var2) {
-                throw new IllegalArgumentException("Input and output buffers must not be the same object, consider using buffer.duplicate()");
+                throw new IllegalArgumentException(
+                        "Input and output buffers must not be the same object, consider using buffer.duplicate()");
             } else if (var2.isReadOnly()) {
                 throw new ReadOnlyBufferException();
             } else {
@@ -803,14 +824,15 @@ public class Cipher {
     public final byte[] doFinal() throws IllegalBlockSizeException, BadPaddingException {
         this.checkCipherState();
         this.chooseFirstProvider();
-        return this.spi.engineDoFinal((byte[])null, 0, 0);
+        return this.spi.engineDoFinal((byte[]) null, 0, 0);
     }
 
-    public final int doFinal(byte[] var1, int var2) throws IllegalBlockSizeException, ShortBufferException, BadPaddingException {
+    public final int doFinal(byte[] var1, int var2)
+            throws IllegalBlockSizeException, ShortBufferException, BadPaddingException {
         this.checkCipherState();
         if (var1 != null && var2 >= 0) {
             this.chooseFirstProvider();
-            return this.spi.engineDoFinal((byte[])null, 0, 0, var1, var2);
+            return this.spi.engineDoFinal((byte[]) null, 0, 0, var1, var2);
         } else {
             throw new IllegalArgumentException("Bad arguments");
         }
@@ -836,7 +858,8 @@ public class Cipher {
         }
     }
 
-    public final int doFinal(byte[] var1, int var2, int var3, byte[] var4) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public final int doFinal(byte[] var1, int var2, int var3, byte[] var4)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         this.checkCipherState();
         if (var1 != null && var2 >= 0 && var3 <= var1.length - var2 && var3 >= 0) {
             this.chooseFirstProvider();
@@ -846,7 +869,8 @@ public class Cipher {
         }
     }
 
-    public final int doFinal(byte[] var1, int var2, int var3, byte[] var4, int var5) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public final int doFinal(byte[] var1, int var2, int var3, byte[] var4, int var5)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         this.checkCipherState();
         if (var1 != null && var2 >= 0 && var3 <= var1.length - var2 && var3 >= 0 && var5 >= 0) {
             this.chooseFirstProvider();
@@ -856,11 +880,13 @@ public class Cipher {
         }
     }
 
-    public final int doFinal(ByteBuffer var1, ByteBuffer var2) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public final int doFinal(ByteBuffer var1, ByteBuffer var2)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         this.checkCipherState();
         if (var1 != null && var2 != null) {
             if (var1 == var2) {
-                throw new IllegalArgumentException("Input and output buffers must not be the same object, consider using buffer.duplicate()");
+                throw new IllegalArgumentException(
+                        "Input and output buffers must not be the same object, consider using buffer.duplicate()");
             } else if (var2.isReadOnly()) {
                 throw new ReadOnlyBufferException();
             } else {
@@ -906,7 +932,8 @@ public class Cipher {
         }
     }
 
-    private AlgorithmParameterSpec getAlgorithmParameterSpec(AlgorithmParameters var1) throws InvalidParameterSpecException {
+    private AlgorithmParameterSpec getAlgorithmParameterSpec(AlgorithmParameters var1)
+            throws InvalidParameterSpecException {
         if (var1 == null) {
             return null;
         } else {
@@ -923,7 +950,8 @@ public class Cipher {
         }
     }
 
-    private static CryptoPermission getConfiguredPermission(String var0) throws NullPointerException, NoSuchAlgorithmException {
+    private static CryptoPermission getConfiguredPermission(String var0)
+            throws NullPointerException, NoSuchAlgorithmException {
         if (var0 == null) {
             throw new NullPointerException();
         } else {
@@ -1031,7 +1059,7 @@ public class Cipher {
         }
 
         private static boolean matches(String var0, String var1) {
-            Pattern var2 = (Pattern)patternCache.get(var0);
+            Pattern var2 = (Pattern) patternCache.get(var0);
             if (var2 == null) {
                 var2 = Pattern.compile(var0);
                 patternCache.putIfAbsent(var0, var2);
@@ -1041,4 +1069,3 @@ public class Cipher {
         }
     }
 }
- 
